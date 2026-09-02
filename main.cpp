@@ -1,7 +1,10 @@
-#include <iostream>
 #include "rocket.h"
+#include <iostream>
 #include <fstream>
 
+//Entry point for the C++ physics port. Runs the same staged rocket configuration as
+//the Python simulation's rk4_stepper, using rk4_step() from rocket.h/cpp. No
+//visualization here by design, just outputs telemetry to CSV only.
 
 int main() {
     RocketConfig config;
@@ -16,6 +19,8 @@ int main() {
     }
     config.initial_total_mass = initial_total_mass;
     config.final_dry_mass = config.stages[1].structural_mass;
+    config.drag_coefficient = 0.3;
+    config.cross_sectional_area = 4.9;
 
     double launch_latitude = 34.7;
     double earth_angular_velocity = 7.292e-5;

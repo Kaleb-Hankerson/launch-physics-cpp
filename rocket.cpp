@@ -41,7 +41,9 @@ double calc_density(const Vector2& position) {
     return SEA_LEVEL_DENSITY * std::exp(-position.y / SCALE_HEIGHT);
 }
 
-
+//Falls through to stages[1] (the final stage) once mass drops below every computed burnout threshold.
+//Hardcoded to a 2-stage array and would need generalizing if a
+//variable stage count were ever supported.
 StageResult get_stage_and_burnout(double mass, const std::array<Stage, 2>& stages, double initial_total_mass, double final_dry_mass) {
     double cumulative_mass = 0;
     for (const Stage& stage : stages) {
@@ -54,15 +56,15 @@ StageResult get_stage_and_burnout(double mass, const std::array<Stage, 2>& stage
     return {stages[1], final_dry_mass};
 }
 
-Vector2 calc_drag(const Vector2& velocity, double air_density) {
+Vector2 calc_drag(const Vector2& velocity, double air_density, double drag_coefficient, double cross_sectional_area) {
     double speed = vector_magnitude(velocity);
     if (speed > 0) {
-        double drag_magnitude = 0.5 * air_density * (speed * speed) * DRAG_COEFFICIENT * CROSS_SECTIONAL_AREA;
+        double drag_magnitude = 0.5 * air_density * (speed * speed) * drag_coefficient * cross_sectional_area;
         double drag_x = -drag_magnitude * (velocity.x / speed);
         double drag_y = -drag_magnitude * (velocity.y / speed);
         return {drag_x, drag_y};
-    }else {
-        return {0.0,0.0};
+    } else {
+        return {0.0, 0.0};
     }
 }
 
@@ -94,7 +96,7 @@ Derivatives calc_derivatives(const Vector2& position, const Vector2& velocity, d
     double mass_rate = calc_mass_rate(mass, sr.stage, sr.burnout_mass);
     double thrust = calc_thrust(mass, sr.stage, sr.burnout_mass);
     double air_density = calc_density(position);
-    Vector2 drag = calc_drag(velocity, air_density);
+    Vector2 drag = calc_drag(velocity, air_density, config.drag_coefficient, config.cross_sectional_area);
     Vector2 net_force = calc_net_force(thrust, drag, angle, mass);
     Vector2 accel = calc_accel(net_force, mass);
     return {velocity, accel, mass_rate};
