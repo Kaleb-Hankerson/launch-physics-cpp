@@ -1,7 +1,7 @@
 #ifndef LAUNCH_TO_ORBIT_SIM_CPP_ROCKET_H
 #define LAUNCH_TO_ORBIT_SIM_CPP_ROCKET_H
 #include <array>
-#include <cmath>
+
 
 
 //Core physics engine for the launch-to-orbit rocket simulation, ported from a Python
@@ -20,15 +20,15 @@ constexpr double GRAVITY = 9.8;
 
 
 struct Vector2 {
-    double x;
-    double y;
+    double x = 0.0;
+    double y = 0.0;
 };
 
 struct RocketState {
-    Vector2 position;
-    Vector2 velocity;
-    double mass;
-    double time;
+    Vector2 position = {0.0, 0.0};
+    Vector2 velocity = {0.0, 0.0};
+    double mass = 0.0;
+    double time = 0.0;
 };
 
 struct Stage {
@@ -46,17 +46,17 @@ struct StageResult {
 // Bundles the rocket's fixed configuration (never changes during flight) into one
 // parameter, keeping calc_derivatives under ~5 arguments
 struct RocketConfig {
-    std::array<Stage, 2> stages;
-    double initial_total_mass;
-    double final_dry_mass;
-    double drag_coefficient;
-    double cross_sectional_area;
+    std::array<Stage, 2> stages{};
+    double initial_total_mass = 0.0;
+    double final_dry_mass = 0.0;
+    double drag_coefficient = 0.0;
+    double cross_sectional_area = 0.0;
 };
 
 struct Derivatives {
-    Vector2 velocity;
-    Vector2 accel;
-    double mass_rate;
+    Vector2 velocity = {0.0, 0.0};
+    Vector2 accel = {0.0, 0.0};
+    double mass_rate = 0.0;
 };
 
 Vector2 operator+(const Vector2& a, const Vector2& b);

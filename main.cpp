@@ -1,6 +1,7 @@
 #include "rocket.h"
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 //Entry point for the C++ physics port. Runs the same staged rocket configuration as
 //the Python simulation's rk4_stepper, using rk4_step() from rocket.h/cpp. No
@@ -22,10 +23,10 @@ int main() {
     config.drag_coefficient = 0.3;
     config.cross_sectional_area = 4.9;
 
-    double launch_latitude = 34.7;
-    double earth_angular_velocity = 7.292e-5;
-    double earth_radius = 6.371e6;
-    double initial_vx = earth_angular_velocity * earth_radius * std::cos(launch_latitude * (M_PI / 180.0));
+    constexpr double launch_latitude = 34.7;
+    constexpr double earth_angular_velocity = 7.292e-5;
+    constexpr double earth_radius = 6.371e6;
+    const double initial_vx = earth_angular_velocity * earth_radius * std::cos(launch_latitude * (M_PI / 180.0));
 
     RocketState state;
     state.position = {0.0, 0.0};
